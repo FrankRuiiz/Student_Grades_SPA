@@ -6,14 +6,30 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = [];
+var student_array = [
+    {
+        studentName: 'Frank',
+        course: 'Math',
+        studentGrade: 89
+    },
+    {
+        studentName: 'Max',
+        course: 'Science',
+        studentGrade: 89
+    },
+    {
+        studentName: 'John',
+        course: 'Geology',
+        studentGrade: 89
+    }
+];
 
 
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var inputIds = ['#studentName', 'course', 'studentGrade'];
+var inputIds = ['#studentName', '#course', '#studentGrade'];
 
 
 
@@ -23,6 +39,7 @@ var inputIds = ['#studentName', 'course', 'studentGrade'];
     $('#add').click(function(){
        console.log('Add was clicked');
         addStudent();
+        clearAddStudentForm();
     });
 
 
@@ -30,7 +47,8 @@ var inputIds = ['#studentName', 'course', 'studentGrade'];
      * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
      */
     $('#cancel').click(function(){
-       console.log('Cancel Clicked');
+        console.log('Cancel Clicked');
+        clearAddStudentForm();
     });
 
 /**
@@ -43,16 +61,22 @@ function addStudent() {
 
     studentObj.studentName = $('#studentName').val();
     studentObj.course = $('#course').val();
-    studentObj.StudentGrade = $('#studentGrade').val();
+    studentObj.studentGrade = $('#studentGrade').val();
 
     student_array.push(studentObj);
-    console.log(student_array); 
+    addStudentToDom(studentObj);
 }
 
 
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
+function clearAddStudentForm() {
+    var i;
+    for( i=0; i <= inputIds.length; i++ ) {
+        $(inputIds[i]).val('');
+    }
+}
 
 
 
@@ -72,7 +96,12 @@ function addStudent() {
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
-
+function updateStudentList(array) {
+    var i;
+    for( i=0; i<array.length; i++ ) {
+        addStudentToDom(array[i]);
+    }
+}
 
 
 /**
@@ -80,14 +109,42 @@ function addStudent() {
  * into the .student_list tbody
  * //@param studentObj
  */
+function addStudentToDom(studentObj) {
+    var tbody = $('.student-list > tbody');
+
+    var student_tr = $('<tr>');
+    var name_td = $('<td>', {
+       html: studentObj.studentName
+    });
+    var course_td = $('<td>', {
+        html: studentObj.course
+    });
+    var grade_td = $('<td>', {
+        html: studentObj.studentGrade
+    });
+
+    student_tr.append(name_td, course_td, grade_td);
+    tbody.append(student_tr);
+    console.log("tbody", tbody);
+}
+
 
 
 
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
+function reset() {
+    student_array = [];
+    $('.student-list > tbody').empty();
+}
+
+
 
 /**
  * Listen for the document to load and reset the data to the initial state
  */
-
+$(document).ready(function() {
+    //reset();
+    updateStudentList(student_array);
+});

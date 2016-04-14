@@ -10,17 +10,17 @@ var student_array = [
     {
         studentName: 'Frank',
         course: 'Math',
-        studentGrade: 89
+        studentGrade: 40
     },
     {
         studentName: 'Max',
         course: 'Science',
-        studentGrade: 89
+        studentGrade: 100
     },
     {
         studentName: 'John',
         course: 'Geology',
-        studentGrade: 89
+        studentGrade: 40
     }
 ];
 
@@ -65,6 +65,7 @@ function addStudent() {
 
     student_array.push(studentObj);
     addStudentToDom(studentObj);
+    updateData();
 }
 
 
@@ -85,12 +86,25 @@ function clearAddStudentForm() {
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
  */
+function calculateAverage() {
+    var gradesTotal = 0;
+    var average = null;
+
+    for( var i=0; i<student_array.length; i++ ) {
+        gradesTotal += parseInt(student_array[i].studentGrade);
+    }
+
+    average = Math.round(gradesTotal / student_array.length);
+    return average;
+}
 
 
 /**
  * updateData - centralized function to update the average and call student list update
  */
-
+function updateData() {
+    $('.avgGrade').html(calculateAverage());
+}
 
 
 /**
@@ -135,7 +149,7 @@ function addStudentToDom(studentObj) {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
-    student_array = [];
+    //student_array = [];
     $('.student-list > tbody').empty();
 }
 
@@ -145,6 +159,7 @@ function reset() {
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function() {
-    //reset();
+    reset();
     updateStudentList(student_array);
+    updateData();
 });

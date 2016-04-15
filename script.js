@@ -169,5 +169,5 @@ function reset() {
 $(document).ready(function () {
     reset();
     updateStudentList();
-    //updateData();
+    updateData();
 });

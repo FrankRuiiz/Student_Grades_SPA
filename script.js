@@ -35,8 +35,8 @@ var inputIds = ['#studentName', '#course', '#studentGrade'];
  * addClicked - Event Handler when user clicks the add button
  */
 $('#add').click(function () {
-    console.log('Add was clicked');
     addStudent();
+    updateData();
     clearAddStudentForm();
 });
 
@@ -45,7 +45,6 @@ $('#add').click(function () {
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
 $('#cancel').click(function () {
-    console.log('Cancel Clicked');
     clearAddStudentForm();
 });
 
@@ -62,7 +61,6 @@ function addStudent() {
     studentObj.studentGrade = $('#studentGrade').val();
 
     student_array.push(studentObj);
-    addStudentToDom(studentObj);
     updateData();
 }
 
@@ -100,16 +98,19 @@ function calculateAverage() {
  */
 function updateData() {
     $('.avgGrade').html(calculateAverage());
+    updateStudentList();
 }
 
 
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
-function updateStudentList(array) {
+function updateStudentList() {
+   $('tbody > tr').remove();
+
     var i;
-    for (i = 0; i < array.length; i++) {
-        addStudentToDom(array[i]);
+    for (i = 0; i < student_array.length; i++) {
+        addStudentToDom(student_array[i], i);
     }
 }
 
@@ -119,7 +120,7 @@ function updateStudentList(array) {
  * into the .student_list tbody
  * //@param studentObj
  */
-function addStudentToDom(studentObj) {
+function addStudentToDom(studentObj, index) {
     var tbody = $('.student-list > tbody');
 
     var student_tr = $('<tr>');
@@ -137,13 +138,19 @@ function addStudentToDom(studentObj) {
     });
     var delete_btn = $('<button>', {
         class: 'btn btn-sm btn-danger',
-        text: 'Delete'
+        text: 'Delete',
+        'data-index': index,
+        click: function() {
+            console.log("this row is ", student_tr);
+            console.log("this row index is ", index);
+        }
     });
 
     delete_td.append(delete_btn);
     student_tr.append(name_td, course_td, grade_td, delete_td);
     tbody.append(student_tr);
-    console.log("tbody", tbody);
+
+
 }
 
 
@@ -161,6 +168,6 @@ function reset() {
  */
 $(document).ready(function () {
     reset();
-    updateStudentList(student_array);
-    updateData();
+    updateStudentList();
+    //updateData();
 });

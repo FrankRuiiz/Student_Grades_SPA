@@ -5,56 +5,18 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = [ // The global student_array holds all student objects
-    {
-        studentName: 'Frank',
-        course: 'Math',
-        studentGrade: 40
-    },
-    {
-        studentName: 'Max',
-        course: 'Science',
-        studentGrade: 100
-    },
-    {
-        studentName: 'John',
-        course: 'Geology',
-        studentGrade: 40
-    }
-];
+var student_array = []; // The global student_array holds all student objects
 
+/**
+ * Represents our firebase object - a reference to the database
+ */
+var firebaseRef = new Firebase("https://jquerysgt.firebaseio.com/students");
 
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
 var inputIds = ['#studentName', '#course', '#studentGrade']; // this array is used inside clearAddStudentForm to clear out the input field when a student is added or the cancel button is clicked
-
-
-/**
- * add - Event Handler when user clicks the add button
- */
-$('#add').click(function () {
-    addStudent();  // adds student from the input form to the student_array
-    updateData();  // updates the average and also calls updateStudentList which updates the DOM since add student added a new object to the student_array
-    clearAddStudentForm(); // just clears out the input values from the form
-});
-
-
-/**
- * cancel - Event Handler when user clicks the cancel button, should clear out student form
- */
-$('#cancel').click(function () {
-    clearAddStudentForm();
-});
-
-/**
- * get data - Event Handler when user clicks the get data button, it will pull student objects from the server
- */
-$('#get-data').click(function(){
-    
-});
-
 
 
 /**
@@ -69,7 +31,16 @@ function addStudent() {
     studentObj.course = $('#course').val();
     studentObj.studentGrade = $('#studentGrade').val();
 
-    student_array.push(studentObj);
+    student_array.push(studentObj); // Adds new student to student array
+
+    firebaseRef.push()              // pushes new student to server
+
+        .set({
+            studentName: studentObj.studentName,
+            course: studentObj.course,
+            studentGrade: studentObj.studentGrade
+        });
+
     updateData();
 }
 
@@ -153,6 +124,7 @@ function addStudentToDom(studentObj, index) {
             console.log(studentObj.studentName + " deleted");
             student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
             student_tr.remove(); // removes the student from the dom
+            updateData();
         }
     });
 
@@ -178,4 +150,28 @@ $(document).ready(function () {
     reset();
     updateStudentList();
     updateData();
+
+    /**
+     * add - Event Handler when user clicks the add button
+     */
+    $('#add').click(function () {
+        addStudent();  // adds student from the input form to the student_array
+        updateData();  // updates the average and also calls updateStudentList which updates the DOM since add student added a new object to the student_array
+        clearAddStudentForm(); // just clears out the input values from the form
+    });
+
+
+    /**
+     * cancel - Event Handler when user clicks the cancel button, should clear out student form
+     */
+    $('#cancel').click(function () {
+        clearAddStudentForm();
+    });
+
+    /**
+     * get data - Event Handler when user clicks the get data button, it will pull student objects from the server
+     */
+    $('#get-data').click(function(){
+
+    });
 });

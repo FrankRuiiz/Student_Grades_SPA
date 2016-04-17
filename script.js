@@ -32,7 +32,7 @@ var inputIds = ['#studentName', '#course', '#studentGrade']; // this array is us
 
 
 /**
- * addClicked - Event Handler when user clicks the add button
+ * add - Event Handler when user clicks the add button
  */
 $('#add').click(function () {
     addStudent();  // adds student from the input form to the student_array
@@ -42,11 +42,20 @@ $('#add').click(function () {
 
 
 /**
- * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
+ * cancel - Event Handler when user clicks the cancel button, should clear out student form
  */
 $('#cancel').click(function () {
     clearAddStudentForm();
 });
+
+/**
+ * get data - Event Handler when user clicks the get data button, it will pull student objects from the server
+ */
+$('#get-data').click(function(){
+    
+});
+
+
 
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -142,16 +151,14 @@ function addStudentToDom(studentObj, index) {
         'data-index': index,
         click: function() {
             console.log(studentObj.studentName + " deleted");
-            student_tr.remove(); // removes the student from the dom
             student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
+            student_tr.remove(); // removes the student from the dom
         }
     });
 
     delete_td.append(delete_btn);
     student_tr.append(name_td, course_td, grade_td, delete_td);
     tbody.append(student_tr);
-
-
 }
 
 

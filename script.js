@@ -5,7 +5,7 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = [
+var student_array = [ // The global student_array holds all student objects
     {
         studentName: 'Frank',
         course: 'Math',
@@ -28,16 +28,16 @@ var student_array = [
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var inputIds = ['#studentName', '#course', '#studentGrade'];
+var inputIds = ['#studentName', '#course', '#studentGrade']; // this array is used inside clearAddStudentForm to clear out the input field when a student is added or the cancel button is clicked
 
 
 /**
  * addClicked - Event Handler when user clicks the add button
  */
 $('#add').click(function () {
-    addStudent();
-    updateData();
-    clearAddStudentForm();
+    addStudent();  // adds student from the input form to the student_array
+    updateData();  // updates the average and also calls updateStudentList which updates the DOM since add student added a new object to the student_array
+    clearAddStudentForm(); // just clears out the input values from the form
 });
 
 
@@ -106,7 +106,7 @@ function updateData() {
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
 function updateStudentList() {
-   $('tbody > tr').remove();
+    $('.student-list > tbody').empty();  //Needs to clear out the current list otherwise we will get duplicates
 
     var i;
     for (i = 0; i < student_array.length; i++) {
@@ -141,8 +141,9 @@ function addStudentToDom(studentObj, index) {
         text: 'Delete',
         'data-index': index,
         click: function() {
-            console.log("this row is ", student_tr);
-            console.log("this row index is ", index);
+            console.log(studentObj.studentName + " deleted");
+            student_tr.remove(); // removes the student from the dom
+            student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
         }
     });
 

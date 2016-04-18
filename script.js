@@ -8,7 +8,7 @@
 var student_array = []; // The global student_array holds all student objects
 
 /**
- * Represents our firebase object - a reference to the database
+ * Represents the firebase object - a reference to the database
  */
 var firebaseRef = new Firebase("https://jquerysgt.firebaseio.com/students");
 
@@ -33,13 +33,11 @@ function addStudent() {
 
     student_array.push(studentObj); // Adds new student to student array
 
-    firebaseRef.push()              // pushes new student to server
-
-        .set({
-            studentName: studentObj.studentName,
-            course: studentObj.course,
-            studentGrade: studentObj.studentGrade
-        });
+    firebaseRef.push({ // pushes new student to server
+        studentName: studentObj.studentName,
+        course: studentObj.course,
+        studentGrade: studentObj.studentGrade
+    });
 
     updateData();
 }
@@ -138,9 +136,39 @@ function addStudentToDom(studentObj, index) {
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
-    //student_array = [];
+    student_array = [];
     $('.student-list > tbody').empty();
 }
+
+
+function responseToStudentArray(data) {
+
+    reset(); // clears the student array and tboy
+
+    for (var student in data) {
+        var studentObj = {};
+        if (data.hasOwnProperty(student)) {
+            studentObj.studentName = data[student].studentName;
+            studentObj.course = data[student].course;
+            studentObj.studentGrade = data[student].studentGrade;
+
+            student_array.push(studentObj);
+        }
+    }
+    
+    updateData();
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -172,6 +200,13 @@ $(document).ready(function () {
      * get data - Event Handler when user clicks the get data button, it will pull student objects from the server
      */
     $('#get-data').click(function(){
+        firebaseRef.on("value", function(snapshot, prevChildKey) {
+            var data = snapshot.val();
+            responseToStudentArray(data);  //function to add each student object to student_array
+            updateStudentList(); // to add the students to the dom
 
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
     });
 });

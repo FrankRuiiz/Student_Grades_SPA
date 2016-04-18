@@ -39,7 +39,13 @@ function addStudent() {
         studentGrade: studentObj.studentGrade
     });
 
-    updateData();
+    // firebaseRef.on("child_added", function(studentSnapshot) {  //TODO: this doesnt seem to do anything
+    //     // console.log(studentSnapshot);
+    //     // updateData();
+    // }, function (errorObject) {
+    //     console.log("The read failed: " + errorObject.code);
+    // });
+
 }
 
 
@@ -119,6 +125,7 @@ function addStudentToDom(studentObj, index) {
         text: 'Delete',
         'data-index': index,
         click: function() {
+
             console.log(studentObj.studentName + " deleted");
             student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
             student_tr.remove(); // removes the student from the dom
@@ -141,11 +148,12 @@ function reset() {
 }
 
 
-function responseToStudentArray(data) {
+function addStudentsFromServer(data) {
 
     reset(); // clears the student array and tboy
 
     for (var student in data) {
+       // console.log(student);
         var studentObj = {};
         if (data.hasOwnProperty(student)) {
             studentObj.studentName = data[student].studentName;
@@ -155,20 +163,9 @@ function responseToStudentArray(data) {
             student_array.push(studentObj);
         }
     }
-    
+
     updateData();
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -202,8 +199,7 @@ $(document).ready(function () {
     $('#get-data').click(function(){
         firebaseRef.on("value", function(snapshot, prevChildKey) {
             var data = snapshot.val();
-            responseToStudentArray(data);  //function to add each student object to student_array
-            updateStudentList(); // to add the students to the dom
+            addStudentsFromServer(data);  //function to add each student object to student_array
 
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);

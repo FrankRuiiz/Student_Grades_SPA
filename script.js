@@ -105,6 +105,7 @@ function updateStudentList() {
  * //@param studentObj
  */
 function addStudentToDom(studentObj, index) {
+
     var tbody = $('.student-list > tbody');
 
     var student_tr = $('<tr>');
@@ -123,13 +124,18 @@ function addStudentToDom(studentObj, index) {
     var delete_btn = $('<button>', {
         class: 'btn btn-sm btn-danger',
         text: 'Delete',
+        id: studentObj.key,
         'data-index': index,
         click: function() {
-
             console.log(studentObj.studentName + " deleted");
-            student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
-            student_tr.remove(); // removes the student from the dom
-            updateData();
+            var studentFirebaseRef = firebaseRef.child(studentObj.key);
+
+            firebaseRef.on('child_removed', function(snapshot) {
+                student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
+                student_tr.remove(); // removes the student from the dom
+                updateData();
+            });
+            studentFirebaseRef.remove();
         }
     });
 
@@ -156,9 +162,12 @@ function addStudentsFromServer(data) {
        // console.log(student);
         var studentObj = {};
         if (data.hasOwnProperty(student)) {
+            studentObj.key = student;
             studentObj.studentName = data[student].studentName;
             studentObj.course = data[student].course;
             studentObj.studentGrade = data[student].studentGrade;
+
+            console.log(studentObj);
 
             student_array.push(studentObj);
         }

@@ -106,24 +106,32 @@ function updateStudentList() {
  */
 function addStudentToDom(studentObj, index) {
 
+    // Each student added will get appended to .student-list > tbody.  The fist <tr> will display saved student information, the second <tr> will be for editing purposes
     var tbody = $('.student-list > tbody');
 
+    // Saved Student info(studentName, course, studentGrade, edit and delete button)
     var student_tr = $('<tr>');
+
+    // creates element for studentName
     var name_td = $('<td>', {
         html: studentObj.studentName
     });
+    // creates element for course
     var course_td = $('<td>', {
         html: studentObj.course
     });
+    //creates element for studentGrade
     var grade_td = $('<td>', {
         html: studentObj.studentGrade
     });
-    var delete_td = $('<td>', {
+    // creates element for delete container (<td>)
+    var operations = $('<td>', {
         class: 'text-center'
     });
+    // creates element for actual delete button and adds delete functionality for DOM and Database
     var delete_btn = $('<button>', {
-        class: 'btn btn-sm btn-danger',
-        text: 'Delete',
+        class: 'btn btn-xs btn-danger',
+        html: 'D',
         id: studentObj.key,
         'data-index': index,
         click: function() {
@@ -140,8 +148,30 @@ function addStudentToDom(studentObj, index) {
         }
     });
 
-    delete_td.append(delete_btn);
-    student_tr.append(name_td, course_td, grade_td, delete_td);
+    var edit_btn = $('<button>', {
+       class: 'btn btn-xs btn-warning',
+       html: 'E'
+        //TODO: add functionality for showing and hiding the edit input fields 
+    });
+
+    // Will contain all input fields for editing a student, including submit and cancel button
+    var studentEdit_tr = $('<tr>');
+    
+    // editStudentName
+    // editCourse
+    // editGrade
+    // button container
+    // submit button
+    // cancel button
+    
+
+
+    operations.append(delete_btn, edit_btn);
+    student_tr.append(name_td, course_td, grade_td, operations);
+    
+    
+    
+    
     tbody.append(student_tr);
 }
 

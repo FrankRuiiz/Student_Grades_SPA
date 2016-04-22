@@ -131,6 +131,7 @@ function addStudentToDom(studentObj, index) {
             var studentFirebaseRef = firebaseRef.child(studentObj.key);
 
             firebaseRef.on('child_removed', function(snapshot) {
+                console.log("Delete Snapshot", snapshot);
                 student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
                 student_tr.remove(); // removes the student from the dom
                 updateData();

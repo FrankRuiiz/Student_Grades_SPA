@@ -133,14 +133,12 @@ function addStudentToDom(studentObj, index) {
         class: 'btn btn-xs btn-danger',
         html: 'D',
         id: studentObj.key,
-        'data-index': index,
         click: function() {
             console.log(studentObj.studentName + " deleted");
             var studentFirebaseRef = firebaseRef.child(studentObj.key);
 
             firebaseRef.on('child_removed', function(snapshot) {
                 console.log("Delete Snapshot", snapshot);
-                student_array.splice(index, 1); // removes student from the student array using the index it was assigned as a reference
                 student_tr.remove(); // removes the student from the dom
                 updateData();
             });
@@ -184,7 +182,7 @@ function addStudentToDom(studentObj, index) {
     });
     
 
-
+    // Appending new student to DOM
     operations.append(delete_btn, edit_btn);
     student_tr.append(name_td, course_td, grade_td, operations);
 

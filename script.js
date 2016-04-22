@@ -94,7 +94,7 @@ function updateStudentList() {
 
     var i;
     for (i = 0; i < student_array.length; i++) {
-        addStudentToDom(student_array[i], i);
+        addStudentToDom(student_array[i]);
     }
 }
 
@@ -104,7 +104,7 @@ function updateStudentList() {
  * into the .student_list tbody
  * //@param studentObj
  */
-function addStudentToDom(studentObj, index) {
+function addStudentToDom(studentObj) {
 
     // Each student added will get appended to .student-list > tbody.  The fist <tr> will display saved student information, the second <tr> will be for editing purposes
     var tbody = $('.student-list > tbody');
@@ -133,7 +133,10 @@ function addStudentToDom(studentObj, index) {
         class: 'btn btn-xs btn-danger',
         html: 'D',
         id: studentObj.key,
-        click: function() {
+        click: function(e) {
+
+            e.preventDefault();
+
             console.log(studentObj.studentName + " deleted");
             var studentFirebaseRef = firebaseRef.child(studentObj.key);
 
@@ -147,13 +150,19 @@ function addStudentToDom(studentObj, index) {
     });
 
     var edit_btn = $('<button>', {
-       class: 'btn btn-xs btn-warning',
-       html: 'E'
-        //TODO: add functionality for showing and hiding the edit input fields 
+        class: 'btn btn-xs btn-warning',
+        html: 'E',
+        click: function(e) {
+            e.preventDefault();
+            $(this).attr('disabled', 'disabled');
+            $(this).closest('tr').next().toggleClass('hide');
+        }
     });
 
     // Will contain all input fields for editing a student, including submit and cancel button
-    var studentEdit_tr = $('<tr>');
+    var studentEdit_tr = $('<tr>', {
+        class: 'hide'
+    });
     
     // editStudentName
     var editName_td = $('<td><input type="text" class="form-control input-sm" id="editStudentName" placeholder="Edit Name"></td>');
@@ -178,7 +187,13 @@ function addStudentToDom(studentObj, index) {
     // cancel button
     var editCancel_btn = $('<button>', {
         class: 'btn btn-xs btn-default',
-        html: '&#x274C;'
+        html: '&#x274C;',
+        click: function(e) {
+            e.preventDefault();
+
+            $(this).closest('tr').toggleClass('hide').prev('tr').find('button').removeAttr('disabled');
+        }
+
     });
     
 

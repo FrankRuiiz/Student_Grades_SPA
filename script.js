@@ -158,21 +158,40 @@ function addStudentToDom(studentObj, index) {
     var studentEdit_tr = $('<tr>');
     
     // editStudentName
+    var editName_td = $('<td><input type="text" class="form-control input-sm" id="editStudentName" placeholder="Edit Name"></td>');
+
     // editCourse
+    var editCourse_td = $('<td><input type="text" class="form-control input-sm" id="editCourse" placeholder="Edit Course"></td>');
+
     // editGrade
+    var editGrade_td = $('<td><input type="text" class="form-control input-sm" id="editStudentGrade" placeholder="Edit Grade"></td>');
+
     // button container
+    var editOps_td = $('<td>', {
+        class: 'text-center'
+    });
+
     // submit button
+    var editSubmit_btn = $('<button>', {
+        class: 'btn btn-xs btn-default',
+        html: '&#x2714;'
+    });
+
     // cancel button
+    var editCancel_btn = $('<button>', {
+        class: 'btn btn-xs btn-default',
+        html: '&#x274C;'
+    });
     
 
 
     operations.append(delete_btn, edit_btn);
     student_tr.append(name_td, course_td, grade_td, operations);
+
+    editOps_td.append(editSubmit_btn, editCancel_btn);
+    studentEdit_tr.append(editName_td, editCourse_td, editGrade_td, editOps_td);
     
-    
-    
-    
-    tbody.append(student_tr);
+    tbody.append(student_tr, studentEdit_tr);
 }
 
 

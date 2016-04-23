@@ -135,12 +135,12 @@ function addStudentToDom(studentObj) {
         class: 'btn btn-xs btn-danger',
         html: 'D',
         id: studentObj.key,
-        click: function(e) {
+        click: function (e) {
 
             e.preventDefault();
 
             console.log(studentObj.studentName + " deleted");
-            firebaseRef.on('child_removed', function(snapshot) {
+            firebaseRef.on('child_removed', function (snapshot) {
                 console.log("Delete Snapshot", snapshot);
                 student_tr.remove(); // removes the student from the dom
                 updateData();
@@ -152,7 +152,7 @@ function addStudentToDom(studentObj) {
     var edit_btn = $('<button>', {
         class: 'btn btn-xs btn-warning',
         html: 'E',
-        click: function(e) {
+        click: function (e) {
             e.preventDefault();
             $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('hide');
         }
@@ -162,15 +162,15 @@ function addStudentToDom(studentObj) {
     var studentEdit_tr = $('<tr>', {
         class: 'hide editInputs'
     });
-    
+
     // editStudentName
-    var editName_td = $('<td><input type="text" class="form-control input-sm editStudentName"  placeholder="Edit Name"></td>');
+    var editName_td = $('<td><input type="text" class="form-control input-sm editStudentName" value="' + studentObj.studentName + '"></td>');
 
     // editCourse
-    var editCourse_td = $('<td><input type="text" class="form-control input-sm editCourse" placeholder="Edit Course"></td>');
+    var editCourse_td = $('<td><input type="text" class="form-control input-sm editCourse" value="' + studentObj.course + '"></td>');
 
     // editGrade
-    var editGrade_td = $('<td><input type="text" class="form-control input-sm editStudentGrade" placeholder="Edit Grade"></td>');
+    var editGrade_td = $('<td><input type="text" class="form-control input-sm editStudentGrade" value="' + studentObj.studentGrade + '"></td>');
 
     // button container
     var editOps_td = $('<td>', {
@@ -182,21 +182,17 @@ function addStudentToDom(studentObj) {
         id: 'editSubmit',
         class: 'btn btn-xs btn-default',
         html: '&#x2714;',
-        click: function(e) {
+        click: function (e) {
             e.preventDefault();
 
-            var edit_tr = $(this).parent().parent();
+            var editedStudentName = studentEdit_tr.find($('.editStudentName')).val();
+            var editedCourse = studentEdit_tr.find($('.editCourse')).val();
+            var editedStudentGrade = studentEdit_tr.find($('.editStudentGrade')).val();
 
-            studentEdit_tr.on('click', '#editSubmit', function() {
-                var editedStudentName = edit_tr.find($('.editStudentName')).val();
-                var editedCourse = edit_tr.find($('.editCourse')).val();
-                var editedStudentGrade = edit_tr.find($('.editStudentGrade')).val();
-
-                studentFirebaseRef.update({
-                    studentName: editedStudentName,
-                    course: editedCourse,
-                    studentGrade: editedStudentGrade
-                });
+            studentFirebaseRef.update({
+                studentName: editedStudentName,
+                course: editedCourse,
+                studentGrade: editedStudentGrade
             });
         }
     });
@@ -205,14 +201,14 @@ function addStudentToDom(studentObj) {
     var editCancel_btn = $('<button>', {
         class: 'btn btn-xs btn-default',
         html: '&#x274C;',
-        click: function(e) {
+        click: function (e) {
             e.preventDefault();
 
             $(this).closest('tr').toggleClass('hide').prev('tr').find('button').removeAttr('disabled');
         }
 
     });
-    
+
 
     // Appending new student to DOM
     operations.append(delete_btn, edit_btn);
@@ -220,7 +216,7 @@ function addStudentToDom(studentObj) {
 
     editOps_td.append(editSubmit_btn, editCancel_btn);
     studentEdit_tr.append(editName_td, editCourse_td, editGrade_td, editOps_td);
-    
+
     tbody.append(student_tr, studentEdit_tr);
 }
 
@@ -239,7 +235,7 @@ function addStudentsFromServer(data) {
     reset(); // clears the student array and tboy
 
     for (var student in data) {
-       // console.log(student);
+        // console.log(student);
         var studentObj = {};
         if (data.hasOwnProperty(student)) {
             studentObj.key = student;
@@ -285,8 +281,8 @@ $(document).ready(function () {
     /**
      * get data - Event Handler when user clicks the get data button, it will pull student objects from the server
      */
-    $('#get-data').click(function(){
-        firebaseRef.on("value", function(snapshot, prevChildKey) {
+    $('#get-data').click(function () {
+        firebaseRef.on("value", function (snapshot, prevChildKey) {
             var data = snapshot.val();
             addStudentsFromServer(data);  //function to add each student object to student_array
 

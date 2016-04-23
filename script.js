@@ -16,7 +16,7 @@ var firebaseRef = new Firebase("https://jquerysgt.firebaseio.com/students");
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var inputIds = ['#studentName', '#course', '#studentGrade']; // this array is used inside clearAddStudentForm to clear out the input field when a student is added or the cancel button is clicked
+var inputIds = ['#studentName', '#course', '#studentGrade']; // Used inside clearAddStudentForm to clear out the input field when a student is added or the cancel button is clicked
 
 
 /**
@@ -132,8 +132,8 @@ function addStudentToDom(studentObj) {
     });
     // creates element for actual delete button and adds delete functionality for DOM and Database
     var delete_btn = $('<button>', {
-        class: 'btn btn-xs btn-danger',
-        html: 'D',
+        class: 'btn btn-sm btn-danger',
+        html: '<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>',
         id: studentObj.key,
         click: function (e) {
 
@@ -150,8 +150,8 @@ function addStudentToDom(studentObj) {
     });
 
     var edit_btn = $('<button>', {
-        class: 'btn btn-xs btn-warning',
-        html: 'E',
+        class: 'btn btn-sm btn-warning',
+        html: '<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>',
         click: function (e) {
             e.preventDefault();
             $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('hide');

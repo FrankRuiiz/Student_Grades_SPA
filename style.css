@@ -1,0 +1,21 @@
+
+tbody .editInputs td input {
+    width: 120px;
+    margin: 0 auto;
+}
+
+td, th {
+    text-align: center;
+}
+
+tr {
+    height: 45px;
+}
+
+.hide {
+    display: none;
+}
+
+button {
+    margin: 0 5px;
+}

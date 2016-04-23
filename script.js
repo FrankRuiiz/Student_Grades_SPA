@@ -106,6 +106,8 @@ function updateStudentList() {
  */
 function addStudentToDom(studentObj) {
 
+    var studentFirebaseRef = firebaseRef.child(studentObj.key);
+
     // Each student added will get appended to .student-list > tbody.  The fist <tr> will display saved student information, the second <tr> will be for editing purposes
     var tbody = $('.student-list > tbody');
 
@@ -138,8 +140,6 @@ function addStudentToDom(studentObj) {
             e.preventDefault();
 
             console.log(studentObj.studentName + " deleted");
-            var studentFirebaseRef = firebaseRef.child(studentObj.key);
-
             firebaseRef.on('child_removed', function(snapshot) {
                 console.log("Delete Snapshot", snapshot);
                 student_tr.remove(); // removes the student from the dom
@@ -154,24 +154,23 @@ function addStudentToDom(studentObj) {
         html: 'E',
         click: function(e) {
             e.preventDefault();
-            $(this).attr('disabled', 'disabled');
-            $(this).closest('tr').next().toggleClass('hide');
+            $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('hide');
         }
     });
 
     // Will contain all input fields for editing a student, including submit and cancel button
     var studentEdit_tr = $('<tr>', {
-        class: 'hide'
+        class: 'hide editInputs'
     });
     
     // editStudentName
-    var editName_td = $('<td><input type="text" class="form-control input-sm" id="editStudentName" placeholder="Edit Name"></td>');
+    var editName_td = $('<td><input type="text" class="form-control input-sm editStudentName"  placeholder="Edit Name"></td>');
 
     // editCourse
-    var editCourse_td = $('<td><input type="text" class="form-control input-sm" id="editCourse" placeholder="Edit Course"></td>');
+    var editCourse_td = $('<td><input type="text" class="form-control input-sm editCourse" placeholder="Edit Course"></td>');
 
     // editGrade
-    var editGrade_td = $('<td><input type="text" class="form-control input-sm" id="editStudentGrade" placeholder="Edit Grade"></td>');
+    var editGrade_td = $('<td><input type="text" class="form-control input-sm editStudentGrade" placeholder="Edit Grade"></td>');
 
     // button container
     var editOps_td = $('<td>', {
@@ -180,8 +179,26 @@ function addStudentToDom(studentObj) {
 
     // submit button
     var editSubmit_btn = $('<button>', {
+        id: 'editSubmit',
         class: 'btn btn-xs btn-default',
-        html: '&#x2714;'
+        html: '&#x2714;',
+        click: function(e) {
+            e.preventDefault();
+
+            var edit_tr = $(this).parent().parent();
+
+            studentEdit_tr.on('click', '#editSubmit', function() {
+                var editedStudentName = edit_tr.find($('.editStudentName')).val();
+                var editedCourse = edit_tr.find($('.editCourse')).val();
+                var editedStudentGrade = edit_tr.find($('.editStudentGrade')).val();
+
+                studentFirebaseRef.update({
+                    studentName: editedStudentName,
+                    course: editedCourse,
+                    studentGrade: editedStudentGrade
+                });
+            });
+        }
     });
 
     // cancel button

@@ -154,13 +154,13 @@ function addStudentToDom(studentObj) {
         html: '<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>',
         click: function (e) {
             e.preventDefault();
-            $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('hide');
+            $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('row-hide');
         }
     });
 
     // Will contain all input fields for editing a student, including submit and cancel button
     var studentEdit_tr = $('<tr>', {
-        class: 'hide editInputs'
+        class: 'row-hide editInputs'
     });
 
     // editStudentName
@@ -204,7 +204,7 @@ function addStudentToDom(studentObj) {
         click: function (e) {
             e.preventDefault();
 
-            $(this).closest('tr').toggleClass('hide').prev('tr').find('button').removeAttr('disabled');
+            $(this).closest('tr').toggleClass('row-hide').prev('tr').find('button').removeAttr('disabled');
         }
 
     });

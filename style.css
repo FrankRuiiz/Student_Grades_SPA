@@ -1,4 +1,8 @@
 
+body {
+    background: url("images/pixel_weave_@2X.png") fixed;
+}
+
 tbody .editInputs td input {
     width: 120px;
     margin: 0 auto;
@@ -17,5 +21,5 @@ button {
 }
 
 .table-striped > tbody > tr:nth-child(4n+1) > td {
-    background-color: #EEE;
+    background-color: #BBB;
 }

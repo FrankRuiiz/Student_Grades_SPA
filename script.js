@@ -1,36 +1,32 @@
 /**
- * Define all global variables here
- */
-/**
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = []; // The global student_array holds all student objects
+var student_array = [];
+
 
 /**
  * Represents the firebase object - a reference to the database
  */
 var firebaseRef = new Firebase("https://jquerysgt.firebaseio.com/students");
 
+
 /**
- * inputIds - id's of the elements that are used to add students
+ * inputIds - Used inside clearAddStudentForm() for clearing out input fields
  * @type {string[]}
  */
-var inputIds = ['#studentName', '#course', '#studentGrade']; // Used inside clearAddStudentForm to clear out the input field when a student is added or the cancel button is clicked
+var inputIds = ['#studentName', '#course', '#studentGrade'];
 
 
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
- *
  * @return undefined
  */
 function addStudent() {
     var studentObj = {};
-
     studentObj.studentName = $('#studentName').val();
     studentObj.course = $('#course').val();
     studentObj.studentGrade = $('#studentGrade').val();
-
     student_array.push(studentObj); // Adds new student to student array
     firebasePush(studentObj);
     clearAddStudentForm();
@@ -86,21 +82,20 @@ function updateStudentList() {
 }
 
 
+
+
+/** DOM creation **/
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
  * into the .student_list tbody
  * //@param studentObj
  */
 function addStudentToDom(studentObj) {
-
     var studentFirebaseRef = firebaseRef.child(studentObj.key);
-
     // Each student added will get appended to .student-list > tbody.  The fist <tr> will display saved student information, the second <tr> will be for editing purposes
     var tbody = $('.student-list > tbody');
-
     // Saved Student info(studentName, course, studentGrade, edit and delete button)
     var student_tr = $('<tr>');
-
     // creates element for studentName
     var name_td = $('<td>', {
         html: studentObj.studentName
@@ -127,8 +122,6 @@ function addStudentToDom(studentObj) {
             firebaseDelete(studentFirebaseRef);
         }
     });
-
-
     var edit_btn = $('<button>', {
         class: 'btn btn-sm btn-warning',
         html: '<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>',
@@ -137,60 +130,41 @@ function addStudentToDom(studentObj) {
             $(this).attr('disabled', 'disabled').closest('tr').next().toggleClass('row-hide');
         }
     });
-
     // Will contain all input fields for editing a student, including submit and cancel button
     var studentEdit_tr = $('<tr>', {
         class: 'row-hide editInputs'
     });
-
     // editStudentName
     var editName_td = $('<td><input type="text" class="form-control input-sm editStudentName" value="' + studentObj.studentName + '"></td>');
-
     // editCourse
     var editCourse_td = $('<td><input type="text" class="form-control input-sm editCourse" value="' + studentObj.course + '"></td>');
-
     // editGrade
     var editGrade_td = $('<td><input type="text" class="form-control input-sm editStudentGrade" value="' + studentObj.studentGrade + '"></td>');
-
-    // button container
-    var editOps_td = $('<td>', {
+    var editOps_td = $('<td>', {  // edit button container
         class: 'text-center'
     });
-
-    // submit button
-    var editSubmit_btn = $('<button>', {
+    var editSubmit_btn = $('<button>', { // submit edit button
         id: 'editSubmit',
         class: 'btn btn-xs btn-default',
         html: '&#x2714;',
         click: function (e) {
             e.preventDefault();
-
             var editedStudentName = studentEdit_tr.find($('.editStudentName')).val();
             var editedCourse = studentEdit_tr.find($('.editCourse')).val();
             var editedStudentGrade = studentEdit_tr.find($('.editStudentGrade')).val();
-
-            studentFirebaseRef.update({
-                studentName: editedStudentName,
-                course: editedCourse,
-                studentGrade: editedStudentGrade
-            });
+            firebaseUpdate(studentFirebaseRef, editedStudentName, editedCourse, editedStudentGrade);
         }
     });
-
-    // cancel button
-    var editCancel_btn = $('<button>', {
+    var editCancel_btn = $('<button>', {  // cancel edit button
         class: 'btn btn-xs btn-default',
         html: '&#x274C;',
         click: function (e) {
             e.preventDefault();
-
             $(this).closest('tr').toggleClass('row-hide').prev('tr').find('button').removeAttr('disabled');
         }
-
     });
 
-
-    // Appending new student to DOM
+    // Appending student <tr>'s to the DOM
     operations.append(delete_btn, edit_btn);
     student_tr.append(name_td, course_td, grade_td, operations);
 
@@ -209,11 +183,11 @@ function reset() {
     $('.student-list > tbody').empty();
 }
 
+
 /**
  * addStudentsFromServer(data) - iterates through response data and pushes student object to student_array
  * @param data
  */
-
 function addStudentsFromServer(data) {
 
     reset(); // clears the student array and tboy
@@ -234,44 +208,13 @@ function addStudentsFromServer(data) {
 
 
 
-/**
- * Listen for the document to load
- */
-$(document).ready(function () {
 
-    /**
-     * add - Event Handler when user clicks the add button
-     */
-
-    $('#add').click(function () {
-        addStudent();  // adds student from the input form to the student_array & firebase
-    });
-
-
-    /**
-     * cancel - Event Handler when user clicks the cancel button
-     */
-
-    $('#cancel').click(function () {   // will clear out the form
-        clearAddStudentForm();
-    });
-
-
-    firebaseCall();  // initial call to the server
-
-});
-
-
-
-
-/** Firebase Operations **/
-
+/** Firebase CRUD Operations **/
 
 /** callServer() - Executes on page load, will call addStudentFromServer() once response data is received
  * 
  */
-function firebaseCall()
-{
+function firebaseRead() {
     firebaseRef.on("value", function (snapshot) {
         var data = snapshot.val();
         addStudentsFromServer(data);  //function to add each student object to student_array
@@ -281,6 +224,11 @@ function firebaseCall()
     });
 }
 
+
+/**
+ * firebasePush(studentObj) - Takes new created student object and and adds it to the database
+ * @param studentObj
+ */
 function firebasePush(studentObj) {
     firebaseRef.push({ // pushes new student to server
         studentName: studentObj.studentName,
@@ -293,7 +241,32 @@ function firebasePush(studentObj) {
     });
 }
 
+
+/**
+ * firebaseDelete(studentFirebaseRef) - Takes student reference and removes that object from the database
+ * @param studentFirebaseRef
+ */
 function firebaseDelete(studentFirebaseRef) {
+    var onComplete = function(error) {
+        if(error) {
+            console.log('Synchronization failed'); // logs an error if sync fails
+        }
+        else {
+            console.log('Synchronization succeeded');
+        }
+    };
+    studentFirebaseRef.remove(onComplete);  // removes student onComplete
+}
+
+
+/**
+ * firebaseUpdate - takes firebase ref and content from edit input fields; updates the database
+ * @param studentFirebaseRef
+ * @param editedStudentName
+ * @param editedCourse
+ * @param editedStudentGrade
+ */
+function firebaseUpdate(studentFirebaseRef, editedStudentName, editedCourse, editedStudentGrade ) {
     var onComplete = function(error) {
         if(error) {
             console.log('Synchronization failed');
@@ -302,5 +275,35 @@ function firebaseDelete(studentFirebaseRef) {
             console.log('Synchronization succeeded');
         }
     };
-    studentFirebaseRef.remove(onComplete);  // removes student onComplete
+    studentFirebaseRef.update({
+        studentName: editedStudentName,
+        course: editedCourse,
+        studentGrade: editedStudentGrade
+    }, onComplete);
 }
+
+
+
+
+/**
+ * Listen for the document to load
+ */
+$(document).ready(function () {
+    /**
+     * add - Event Handler when user clicks the add button
+     */
+    $('#add').click(function () {
+        addStudent();  // adds student from the input form to the student_array & firebase
+    });
+
+
+    /**
+     * cancel - Event Handler when user clicks the cancel button
+     */
+    $('#cancel').click(function () {   // will clear out the form
+        clearAddStudentForm();
+    });
+    
+    
+    firebaseRead();  // initial call to the server
+});

@@ -244,6 +244,20 @@ function sortCourse($elem) {
     updateStudentList();
 }
 
+function sortGrade($elem) {
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            return a.studentGrade - b.studentGrade;
+        });
+    }
+    updateStudentList();
+}
+
 
 /** Firebase CRUD Operations **/
 
@@ -347,6 +361,10 @@ $(document).ready(function () {
 
     $('#sortCourse').click(function() {
        sortCourse($(this));
+    });
+
+    $('#sortGrade').click(function() {
+       sortGrade($(this));
     });
     
     firebaseRead();  // initial call to the server

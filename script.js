@@ -206,15 +206,24 @@ function addStudentsFromServer(data) {
     updateData();
 }
 
-function sortStudentName() {
-    student_array.sort(function(a, b) {
-        if( a.studentName < b.studentName ) {
-            return -1;
-        }
-        else {
-            return a.studentName > b.studentName ? 1 : 0;
-        }
-    });
+function sortStudentName($elem) {
+    console.log($elem);
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            if( a.studentName < b.studentName ) {
+                return -1;
+            }
+            else {
+                return a.studentName > b.studentName ? 1 : 0;
+            }
+        });
+
+    }
 
     updateStudentList();
 }
@@ -316,8 +325,8 @@ $(document).ready(function () {
     });
 
 
-    $('#stuName').click(function() {
-       sortStudentName();
+    $('#sortName').click(function() {
+       sortStudentName($(this));
     });
     
     firebaseRead();  // initial call to the server

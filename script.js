@@ -206,7 +206,18 @@ function addStudentsFromServer(data) {
     updateData();
 }
 
+function sortStudentName() {
+    student_array.sort(function(a, b) {
+        if( a.studentName < b.studentName ) {
+            return -1;
+        }
+        else {
+            return a.studentName > b.studentName ? 1 : 0;
+        }
+    });
 
+    updateStudentList();
+}
 
 
 /** Firebase CRUD Operations **/
@@ -303,7 +314,11 @@ $(document).ready(function () {
     $('#cancel').click(function () {   // will clear out the form
         clearAddStudentForm();
     });
-    
+
+
+    $('#stuName').click(function() {
+       sortStudentName();
+    });
     
     firebaseRead();  // initial call to the server
 });

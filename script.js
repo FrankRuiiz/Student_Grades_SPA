@@ -207,7 +207,6 @@ function addStudentsFromServer(data) {
 }
 
 function sortStudentName($elem) {
-    console.log($elem);
     if($elem.hasClass('sorted')) {
         student_array.reverse();
     }
@@ -222,9 +221,26 @@ function sortStudentName($elem) {
                 return a.studentName > b.studentName ? 1 : 0;
             }
         });
-
     }
+    updateStudentList();
+}
 
+function sortCourse($elem) {
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            if( a.course < b.course ) {
+                return -1;
+            }
+            else {
+                return a.course > b.course ? 1 : 0;
+            }
+        });
+    }
     updateStudentList();
 }
 
@@ -327,6 +343,10 @@ $(document).ready(function () {
 
     $('#sortName').click(function() {
        sortStudentName($(this));
+    });
+
+    $('#sortCourse').click(function() {
+       sortCourse($(this));
     });
     
     firebaseRead();  // initial call to the server

@@ -206,7 +206,57 @@ function addStudentsFromServer(data) {
     updateData();
 }
 
+function sortStudentName($elem) {
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            if( a.studentName < b.studentName ) {
+                return -1;
+            }
+            else {
+                return a.studentName > b.studentName ? 1 : 0;
+            }
+        });
+    }
+    updateStudentList();
+}
 
+function sortCourse($elem) {
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            if( a.course < b.course ) {
+                return -1;
+            }
+            else {
+                return a.course > b.course ? 1 : 0;
+            }
+        });
+    }
+    updateStudentList();
+}
+
+function sortGrade($elem) {
+    if($elem.hasClass('sorted')) {
+        student_array.reverse();
+    }
+    else {
+        $elem.addClass('sorted');
+        $elem.siblings().removeClass('sorted');
+        student_array.sort(function(a, b) {
+            return a.studentGrade - b.studentGrade;
+        });
+    }
+    updateStudentList();
+}
 
 
 /** Firebase CRUD Operations **/
@@ -303,7 +353,19 @@ $(document).ready(function () {
     $('#cancel').click(function () {   // will clear out the form
         clearAddStudentForm();
     });
-    
+
+
+    $('#sortName').click(function() {
+       sortStudentName($(this));
+    });
+
+    $('#sortCourse').click(function() {
+       sortCourse($(this));
+    });
+
+    $('#sortGrade').click(function() {
+       sortGrade($(this));
+    });
     
     firebaseRead();  // initial call to the server
 });

@@ -1,6 +1,6 @@
 
 body {
-    background: url("images/pixel_weave_@2X.png") fixed;
+    background: url("images/tileable_wood_texture.png") fixed;
 }
 
 button {
@@ -16,10 +16,25 @@ td, th {
     text-align: center;
 }
 
+.student-list th {
+    color: #FFF;
+    background-color: #670a22;
+    font-size: 3vmin;
+    cursor: pointer;
+}
+
+.student-list th:not(:last-child):hover {
+    background-color: #777777;
+}
+
+.editInputs {
+    background-color: #FFF;
+}
+
 .row-hide {
     display: none;
 }
 
 .table-striped > tbody > tr:nth-child(4n+1) > td {
-    background-color: #BBB;
+    background-color: #EEE;
 }

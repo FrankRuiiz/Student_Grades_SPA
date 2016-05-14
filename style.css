@@ -1,10 +1,24 @@
 
+/* Global Styles */
 body {
     background: url("images/tileable_wood_texture.png") fixed;
 }
 
 button {
     margin: 2px 5px;
+}
+
+/* Header */
+
+.page-header {
+    border: none;
+}
+
+
+/* Table Styles */
+
+.table-striped > tbody > tr:nth-child(4n+1) > td {
+    background-color: #EEE;
 }
 
 tbody .editInputs td input {
@@ -31,10 +45,8 @@ td, th {
     background-color: #FFF;
 }
 
+/* used for showing and hiding the edit rows */
 .row-hide {
     display: none;
 }
 
-.table-striped > tbody > tr:nth-child(4n+1) > td {
-    background-color: #EEE;
-}

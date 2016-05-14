@@ -1,10 +1,24 @@
 
+/* Global Styles */
 body {
-    background: url("images/pixel_weave_@2X.png") fixed;
+    background: url("images/tileable_wood_texture.png") fixed;
 }
 
 button {
     margin: 2px 5px;
+}
+
+/* Header */
+
+.page-header {
+    border: none;
+}
+
+
+/* Table Styles */
+
+.table-striped > tbody > tr:nth-child(4n+1) > td {
+    background-color: #EEE;
 }
 
 tbody .editInputs td input {
@@ -16,10 +30,23 @@ td, th {
     text-align: center;
 }
 
+.student-list th {
+    color: #FFF;
+    background-color: #670a22;
+    font-size: 3vmin;
+    cursor: pointer;
+}
+
+.student-list th:not(:last-child):hover {
+    background-color: #777777;
+}
+
+.editInputs {
+    background-color: #FFF;
+}
+
+/* used for showing and hiding the edit rows */
 .row-hide {
     display: none;
 }
 
-.table-striped > tbody > tr:nth-child(4n+1) > td {
-    background-color: #BBB;
-}

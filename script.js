@@ -4,7 +4,6 @@
  */
 var student_array = [];
 
-
 /**
  * Represents the firebase object - a reference to the database
  */
@@ -366,6 +365,12 @@ $(document).ready(function () {
     $('#sortGrade').click(function() {
        sortGrade($(this));
     });
-    
+
+    var $load  = $('<div class="loading"><i class="fa fa-cog fa-spin fa-5x fa-fw"></i><span class="sr-only">Loading...</span></div>').appendTo($(".student-list-container"));
+
     firebaseRead();  // initial call to the server
+
+    firebaseRef.on('value', function() {
+        $load.remove();
+    });
 });

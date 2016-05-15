@@ -263,8 +263,9 @@ function sortGrade($elem) {
 /** callServer() - Executes on page load, will call addStudentFromServer() once response data is received
  * 
  */
-function firebaseRead() {
+function firebaseRead($load) {
     firebaseRef.on("value", function (snapshot) {
+        $load.hide();
         var data = snapshot.val();
         addStudentsFromServer(data);  //function to add each student object to student_array
 
@@ -368,9 +369,6 @@ $(document).ready(function () {
 
     var $load  = $('<div class="loading"><i class="fa fa-cog fa-spin fa-5x fa-fw"></i><span class="sr-only">Loading...</span></div>').appendTo($(".student-list-container"));
 
-    firebaseRead();  // initial call to the server
+    firebaseRead($load);  // initial call to the server
 
-    firebaseRef.on('value', function() {
-        $load.remove();
-    });
 });

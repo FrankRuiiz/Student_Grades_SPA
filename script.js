@@ -258,6 +258,8 @@ function sortGrade($elem) {
 }
 
 
+
+
 /** Firebase CRUD Operations **/
 
 /** callServer() - Executes on page load, will call addStudentFromServer() once response data is received
@@ -343,7 +345,7 @@ $(document).ready(function () {
      * add - Event Handler when user clicks the add button
      */
     $('#add').click(function () {
-        addStudent();  // adds student from the input form to the student_array & firebase
+        validateNewEntry(); // validates new entry before request to add to the database
     });
 
 
@@ -372,3 +374,18 @@ $(document).ready(function () {
     firebaseRead($load);  // initial call to the server
 
 });
+
+function validateNewEntry() {
+    var i;
+    for (i = 0; i < inputIds.length; i++) {
+        var $elem = $(inputIds[i]).val();
+        console.log($elem);
+
+        if ( $elem == null || $elem == '' ) {
+            alert('all fields must be set');
+            return false;
+        }
+    }
+    addStudent();  // adds student from the input form to the student_array & firebase if all inputs have a value
+}
+

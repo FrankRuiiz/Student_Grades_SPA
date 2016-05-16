@@ -258,13 +258,16 @@ function sortGrade($elem) {
 }
 
 
+
+
 /** Firebase CRUD Operations **/
 
 /** callServer() - Executes on page load, will call addStudentFromServer() once response data is received
  * 
  */
-function firebaseRead() {
+function firebaseRead($load) {
     firebaseRef.on("value", function (snapshot) {
+        $load.hide();
         var data = snapshot.val();
         addStudentsFromServer(data);  //function to add each student object to student_array
 
@@ -342,7 +345,7 @@ $(document).ready(function () {
      * add - Event Handler when user clicks the add button
      */
     $('#add').click(function () {
-        addStudent();  // adds student from the input form to the student_array & firebase
+        validateNewEntry(); // validates new entry before request to add to the database
     });
 
 
@@ -368,9 +371,21 @@ $(document).ready(function () {
 
     var $load  = $('<div class="loading"><i class="fa fa-cog fa-spin fa-5x fa-fw"></i><span class="sr-only">Loading...</span></div>').appendTo($(".student-list-container"));
 
-    firebaseRead();  // initial call to the server
+    firebaseRead($load);  // initial call to the server
 
-    firebaseRef.on('value', function() {
-        $load.remove();
-    });
 });
+
+function validateNewEntry() {
+    var i;
+    for (i = 0; i < inputIds.length; i++) {
+        var $elem = $(inputIds[i]).val();
+        console.log($elem);
+
+        if ( $elem == null || $elem == '' ) {
+            alert('all fields must be set');
+            return false;
+        }
+    }
+    addStudent();  // adds student from the input form to the student_array & firebase if all inputs have a value
+}
+
